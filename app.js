@@ -4,75 +4,71 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-
 const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+// Connect to MongoDB Atlas
+mongoose.connect("mongodb+srv://dipak123vag:Atg3ci6q4CpTT22f@cluster0.bwtnyxh.mongodb.net/todolistDB", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log("Connected to MongoDB Atlas");
+}).catch((error) => {
+  console.log("Error connecting to MongoDB Atlas:", error);
+});
 
-mongoose.connect("mongodb://localhost:27017/todolistDB");
-
-const itemSchema={
-
-  name : String
-
+const itemSchema = {
+  name: String
 };
 
-const Item= mongoose.model("Item" , itemSchema);
+const Item = mongoose.model("Item", itemSchema);
 
-const item1 = new Item({
-  name : "Welcome to do list"
-}) ;
-const item2 = new Item({
-  name : "hey there how your days going"
-}) ;
-const item3 = new Item({
-  name : "happy to see you"
-}) ;
-
- 
-const defultItems= [item1,item2,item3];
-Item.insertMany(defultItems).then(function () {
-  console.log("Successfully saved defult items to DB");
-}).catch(function (err) {
-  console.log(err);
-});
- 
-
-app.get("/", function(req, res) {
-
-Item.find({}, function(err, foundItems){
-  
-  res.render("list", {listTitle: "Today", newListItems: foundItems});
-
-});
-
-});
-
-app.post("/", function(req, res){
-
-  const item = req.body.newItem;
-
-  if (req.body.list === "Work") {
-    workItems.push(item);
-    res.redirect("/work");
-  } else {
-    items.push(item);
-    res.redirect("/");
+// Home Route
+app.get("/", async function(req, res) {
+  try {
+    // Retrieve all items from the database
+    const foundItems = await Item.find({});
+    res.render("list", { listTitle: "Today", newListItems: foundItems });
+  } catch (err) {
+    console.log(err);
   }
 });
 
-app.get("/work", function(req,res){
-  res.render("list", {listTitle: "Work List", newListItems: workItems});
+// Add Item Route
+app.post("/", async function(req, res) {
+  const itemName = req.body.newItem;
+  const item = new Item({ name: itemName });
+  try {
+    // Save the new item to the database
+    await item.save();
+    res.redirect("/");
+  } catch (err) {
+    console.log(err);
+  }
 });
 
-app.get("/about", function(req, res){
+// Delete Item Route
+app.post("/delete", async function(req, res) {
+  const checkedItemId = req.body.checkbox;
+  try {
+    // Find and remove the selected item from the database
+    await Item.findByIdAndRemove(checkedItemId);
+    res.redirect("/");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// About Route
+app.get("/about", function(req, res) {
   res.render("about");
 });
 
+// Start the server
 app.listen(3000, function() {
   console.log("Server started on port 3000");
 });

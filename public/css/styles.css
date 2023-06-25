@@ -94,3 +94,69 @@ footer {
   color: rgba(0, 0, 0, 0.5);
   text-align: center;
 }
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.list {
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  word-break: break-all;
+}
+.todo-item
+{
+ width: 80%;
+}
+.delete-form {
+  flex: 0 0 auto;
+  margin-right: 10px;
+}
+
+.delete-form input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.add-form {
+  display: flex;
+  align-items: center;
+}
+
+.add-form input[type="text"] {
+  flex: 1;
+  padding: 5px;
+  border-radius: 5px 0 0 5px;
+  border: none;
+}
+
+.add-form button {
+  flex: 0 0 auto;
+  padding: 5px 10px;
+  border-radius: 0 5px 5px 0;
+  border: none;
+  background-color: #4caf50;
+  color: #fff;
+  cursor: pointer;
+}
+
+.add-form button:hover {
+  background-color: #45a049;
+}
+
+.list p {
+  margin: 0;
+}
